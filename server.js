@@ -38,6 +38,23 @@ app.post("/api/location", (req, res) => {
   }
 });
 
+// ✅ NUEVO MÉTODO GET
+app.get("/api/location", (req, res) => {
+  try {
+    if (!fs.existsSync(DATA_PATH)) {
+      return res.json([]); // Si no existe, devolver array vacío
+    }
+
+    const raw = fs.readFileSync(DATA_PATH, "utf8");
+    const data = raw ? JSON.parse(raw) : [];
+
+    res.json(data);
+  } catch (err) {
+    console.error("❌ ERROR LEYENDO ARCHIVO:", err);
+    res.status(500).json({ error: "No se pudo leer el archivo" });
+  }
+});
+
 app.listen(process.env.PORT || 4000, () =>
   console.log("🚀 API ONLINE")
 );
